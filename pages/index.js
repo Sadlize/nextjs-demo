@@ -30,6 +30,13 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
+      {test && (
+        <div className={styles.popup}>
+          {new Array(100).fill().map((item, i) => (
+            <div key={i} className={styles.popupBlock}>{i}</div>
+          ))}
+        </div>
+      )}
       <header>
         <nav className={styles.header}>
           <ul>
