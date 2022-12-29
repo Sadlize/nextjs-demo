@@ -1,18 +1,26 @@
 import Head from "next/head"
 import { useEffect, useRef, useState } from "react"
 import styles from "styles/Home.module.css"
-import { disableBodyScroll, enableBodyScroll } from "body-scroll-lock"
+import {scrollBlock} from 'utils/scrollBlock';
+
 
 export default function Home() {
   const [test, setTest] = useState(false)
-  const $header = useRef()
-  useEffect(() => {
-    const header = $header.current
-    if (test) {
-      disableBodyScroll(header)
+  const yPos = useRef(0)
+
+  const scrollBlockHelper = status => {
+    const body = document.querySelector('body');
+    if (status) {
+      yPos.current = window.scrollY;
+      scrollBlock(true, body, null);
     } else {
-      enableBodyScroll(header)
+      scrollBlock(false, body, null, yPos.current, null);
+      yPos.current = 0;
     }
+  };
+
+  useEffect(() => {
+    scrollBlockHelper(test);
   }, [test])
   return (
     <div>
@@ -22,7 +30,7 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <header ref={$header}>
+      <header>
         <nav className={styles.header}>
           <ul>
             <li>First</li>
@@ -39,9 +47,9 @@ export default function Home() {
         </nav>
       </header>
       <main className={styles.main}>
-        <h1 className={styles.title}>
-          Welcome to <a href="https://nextjs.org">Next.js</a> demo!
-        </h1>
+        {new Array(100).fill().map((item, i) => (
+          <div key={i} className={styles.block}>{i}</div>
+        ))}
       </main>
 
       <footer className={styles.footer}></footer>
